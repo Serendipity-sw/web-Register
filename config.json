@@ -1,0 +1,4 @@
+{
+  "serverListeningPort":8080,
+  "logsDir":"./logs"
+}
