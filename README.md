@@ -18,6 +18,7 @@
     
     需要转发的接口
     http://localhost:8080/api/gloomy/gloomysw.api
+    参数请自行添加 url 传参请使用get提交   post 表单传参请使用post请求
     改地址进入后会转化为 forwardingDomain(配置的转发域名) + /gloomy/gloomysw.api
     所有需要转发的cookie会一并转发过去,转发接口返回的cookie会写到当前客户端域名下,以便后续请求可以正确携带cookie
         
