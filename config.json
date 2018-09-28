@@ -1,4 +1,6 @@
 {
   "serverListeningPort":8080,
-  "logsDir":"./logs"
+  "logsDir":"./logs",
+  "forwardingDomain":"http://google.com",
+  "rootPrefix":""
 }

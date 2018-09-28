@@ -1,13 +1,21 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/smtc/glog"
 	"html/template"
 	"net/http"
+	"net/url"
 	"path"
 	"strings"
 )
+
+type resultData struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+	Data    string `json:"data"`
+}
 
 var (
 	// templates定义
@@ -36,7 +44,8 @@ func setGinRouter(r *gin.Engine) {
 	{
 		g.GET("/", func(c *gin.Context) { c.String(http.StatusOK, "ok") }) //确认接口服务程序是否健在
 		g.GET("/templates/*pth", htmlTemplates)
-		g.Any("/api/:parms", apiRegister) // 信息化用户查询接口
+		g.GET("/api/:parms", apiRegisterGet)   //接口转发
+		g.POST("/api/:parms", apiRegisterPost) //接口转发
 	}
 }
 
@@ -60,8 +69,33 @@ func htmlTemplates(c *gin.Context) {
 	http.ServeFile(c.Writer, c.Request, fp)
 }
 
-func apiRegister(c *gin.Context) {
+func apiRegisterGet(c *gin.Context) {
+	values := c.Request.URL.Query()
+	httpProcess(c, values, http.MethodGet)
+}
 
+func apiRegisterPost(c *gin.Context) {
+	values := c.Request.PostForm
+	httpProcess(c, values, http.MethodGet)
+}
+
+func httpProcess(c *gin.Context, values url.Values, method string) {
+	var (
+		resultData resultData
+	)
+	parms := c.Param("parms")
+	cookieIn := c.Request.Cookies()
+	resopneStr, cookieArrayIn, resultCode, err := register(http.MethodGet, parms, values, cookieIn)
+	resultData.Code = resultCode
+	resultData.Message = resopneStr
+	resultByte, _ := json.Marshal(resultData)
+	defer c.String(http.StatusOK, string(resultByte))
+	if err != nil {
+		glog.Error("apiRegisterGet register run err! parms: %s values: %v cookieIn: %v \n", parms, values, cookieIn)
+	}
+	for _, item := range *cookieArrayIn {
+		c.SetCookie(item.Name, item.Value, item.MaxAge, "/", c.Request.Host, item.Secure, item.HttpOnly)
+	}
 }
 
 func getAssetFilePath(pth string) (string, error) {
