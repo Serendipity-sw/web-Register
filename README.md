@@ -21,5 +21,18 @@
     参数请自行添加 url 传参请使用get提交   post 表单传参请使用post请求
     改地址进入后会转化为 forwardingDomain(配置的转发域名) + /gloomy/gloomysw.api
     所有需要转发的cookie会一并转发过去,转发接口返回的cookie会写到当前客户端域名下,以便后续请求可以正确携带cookie
+    
+###接口返回值说明(寄存器返回对象)
+    {
+        Code string 返回码(该返回码为寄存器返回)
+        Data string 转发接口返回对象json字符串
+    }
+    
+    Code 对照
+    00000 成功
+    00001 http转发构建失败
+    00002 http转发请求失败
+    00003 http转发请求返回值读取失败
+
         
 ###接口支持POST 及 get 转发请求 
