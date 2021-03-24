@@ -43,7 +43,7 @@ func setGinRouter(r *gin.Engine) {
 	}
 	{
 		g.GET("/", func(c *gin.Context) { c.String(http.StatusOK, "ok") }) //确认接口服务程序是否健在
-		g.GET("/templates/*pth", htmlTemplates)
+		g.GET("/api/*pth", htmlTemplates)
 		g.GET("/api/:parms", apiRegisterGet)   //接口转发
 		g.POST("/api/:parms", apiRegisterPost) //接口转发
 	}
